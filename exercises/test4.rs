@@ -5,7 +5,15 @@
 
 // Write a macro that passes the test! No hints this time, you can do it!
 
-// I AM NOT DONE
+macro_rules! my_macro {
+    ($e:literal) => {
+        {
+            let val: &str = $e;
+            let result: String = format!("Hello {}", val);
+            result
+        }
+    };
+}
 
 fn main() {
     if my_macro!("world!") != "Hello world!" {

@@ -1,3 +1,13 @@
+macro_rules! my_macro_1 {
+    ($e:literal) => {
+        {
+            let val: &str = $e;
+            let result: String = format!("Hello {}", val);
+            result
+        }
+    };
+}
+
 fn main() {
     let word = String::from("green"); // Try not changing this line :)
     if is_a_color_word(&word) {
@@ -32,6 +42,10 @@ fn main() {
     let m: &str = "  hello there ";
     let n: &str = m.trim();
     string_slice(n);
+
+    // macros
+    let sample: String = my_macro_1!("Mundo");
+    println!("{:?}", sample);
 }
 
 fn is_a_color_word(attempt: &str) -> bool {
