@@ -4,21 +4,33 @@
 // Why not? What should we do to fix it?
 // Execute `rustlings hint errors3` for hints!
 
-// I AM NOT DONE
-
 use std::num::ParseIntError;
 
-fn main() {
-    let mut tokens = 100;
-    let pretend_user_input = "8";
+fn main() -> Result<i32, UserError> {
+    let mut tokens: i32 = 100;
+    let pretend_user_input: &str = "8";
 
     let cost = total_cost(pretend_user_input)?;
 
     if cost > tokens {
         println!("You can't afford that many!");
+        Err(UserError::NotEnoughTokens)
     } else {
         tokens -= cost;
         println!("You now have {} tokens.", tokens);
+        Ok(tokens)
+    }
+}
+
+pub enum UserError
+{
+    InvalidInput(ParseIntError),
+    NotEnoughTokens
+}
+
+impl From<ParseIntError> for UserError {
+    fn from(error: ParseIntError) -> Self {
+        UserError::InvalidInput(error)
     }
 }
 
