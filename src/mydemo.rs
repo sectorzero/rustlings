@@ -46,6 +46,38 @@ fn main() {
     // macros
     let sample: String = my_macro_1!("Mundo");
     println!("{:?}", sample);
+
+    // iterator usage
+    let v = vec!["ana", "ars", "alu", "sel"];
+
+    for element in &v {
+        println!("{}", element);
+    }
+
+    let mut iterator = (&v).into_iter();
+    while let Some(element) = iterator.next() {
+        println!("{}", element);
+    } 
+
+    let mut iterator = v.into_iter();
+    while let Some(element) = iterator.next() {
+        println!("{}", element);
+    } 
+
+    capitalize_first("hello");
+
+    let numbers = vec![27, 297, 38502, 81];
+    let division_results: Result<Vec<_>, DivisionError> = Ok(numbers
+        .into_iter()
+        .map(|n| divide(n, 27))
+        .filter_map(Result::ok)
+        .collect());
+
+    println!("{:?}", division_results);
+
+    print_range(0);
+    print_range(1);
+    print_range(2);
 }
 
 fn is_a_color_word(attempt: &str) -> bool {
@@ -58,4 +90,40 @@ fn string_slice(arg: &str) {
 
 fn string(arg: String) {
     println!("{}", arg);
+}
+
+pub fn capitalize_first(input: &str) -> String {
+    let mut c = input.chars();
+    let s = match c.next() {
+        None => String::new(),
+        Some(first) => first.to_uppercase().collect::<String>() + c.as_str(),
+    };
+    s
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum DivisionError {
+    NotDivisible(NotDivisibleError),
+    DivideByZero,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct NotDivisibleError {
+    dividend: i32,
+    divisor: i32,
+}
+
+pub fn divide(a: i32, b: i32) -> Result<i32, DivisionError> {
+    if b == 0 {
+        return Err(DivisionError::DivideByZero);
+    }
+
+    match a % b {
+        0 => Ok(a / b),
+        _ => Err(DivisionError::NotDivisible(NotDivisibleError{dividend: a, divisor: b}))
+    }
+}
+
+pub fn print_range(num: u64) {
+    println!("{:?}", (1..num+1).collect::<Vec<_>>());
 }

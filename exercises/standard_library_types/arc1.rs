@@ -4,17 +4,19 @@
 // somewhere. Try not to create any copies of the `numbers` Vec!
 // Execute `rustlings help arc1` for hints :)
 
-// I AM NOT DONE
-
 use std::sync::Arc;
 use std::thread;
 
 fn main() {
     let numbers: Vec<_> = (0..100u32).collect();
-    let shared_numbers = // TODO
+
+    let shared_numbers = Arc::new(numbers);
+    //println!("{}", numbers[0]); // check if numbers is moved out
+
     let mut joinhandles = Vec::new();
 
     for offset in 0..8 {
+        let child_numbers = Arc::clone(&shared_numbers);
         joinhandles.push(thread::spawn(move || {
             let mut i = offset;
             let mut sum = 0;
