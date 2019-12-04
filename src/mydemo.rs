@@ -1,11 +1,11 @@
+use std::collections::BTreeMap;
+
 macro_rules! my_macro_1 {
-    ($e:literal) => {
-        {
-            let val: &str = $e;
-            let result: String = format!("Hello {}", val);
-            result
-        }
-    };
+    ($e:literal) => {{
+        let val: &str = $e;
+        let result: String = format!("Hello {}", val);
+        result
+    }};
 }
 
 fn main() {
@@ -19,7 +19,7 @@ fn main() {
     // strings
     string_slice("blue");
 
-    let s: String = String::from("abc"); 
+    let s: String = String::from("abc");
     let t: &str = &s[0..1];
     string_slice(t);
 
@@ -57,12 +57,12 @@ fn main() {
     let mut iterator = (&v).into_iter();
     while let Some(element) = iterator.next() {
         println!("{}", element);
-    } 
+    }
 
     let mut iterator = v.into_iter();
     while let Some(element) = iterator.next() {
         println!("{}", element);
-    } 
+    }
 
     capitalize_first("hello");
 
@@ -78,6 +78,17 @@ fn main() {
     print_range(0);
     print_range(1);
     print_range(2);
+
+    let data = populate_cities();
+    println!("{:?}", data);
+    println!("{:?}", data.values());
+
+    let mut cities_1: Vec<&str> = Vec::new();
+    data.values().fold(&mut cities_1, |accum, v| { for c in v {accum.push(c)}; accum });
+    println!("{:?}", cities_1); 
+    let mut cities_2: Vec<&str> = Vec::new();
+    data.values().fold(&mut cities_2, |accum, v| { accum.extend(v); accum }); 
+    println!("{:?}", cities_2); 
 }
 
 fn is_a_color_word(attempt: &str) -> bool {
@@ -120,10 +131,25 @@ pub fn divide(a: i32, b: i32) -> Result<i32, DivisionError> {
 
     match a % b {
         0 => Ok(a / b),
-        _ => Err(DivisionError::NotDivisible(NotDivisibleError{dividend: a, divisor: b}))
+        _ => Err(DivisionError::NotDivisible(NotDivisibleError {
+            dividend: a,
+            divisor: b,
+        })),
     }
 }
 
 pub fn print_range(num: u64) {
-    println!("{:?}", (1..num+1).collect::<Vec<_>>());
+    println!("{:?}", (1..num + 1).collect::<Vec<_>>());
+}
+
+fn populate_cities() -> BTreeMap<&'static str, Vec<&'static str>> {
+    let mut cities = BTreeMap::new();
+
+    cities.insert("Japan", vec!["Tokyo", "Kyoto"]);
+    cities.insert("The United States", vec!["Portland", "Nashville"]);
+    cities.insert("Brazil", vec!["São Paulo", "Brasília"]);
+    cities.insert("Kenya", vec!["Nairobi", "Mombasa"]);
+    cities.insert("The Netherlands", vec!["Amsterdam", "Utrecht"]);
+
+    cities
 }
